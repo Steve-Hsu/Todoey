@@ -32,5 +32,24 @@ class TodoListViewController: UITableViewController{
         return cell
     }
     
+    //MARK - TableView Delegate Methods
+    //The method will send a signal to the delegate(the TableViewController) when user select a cell in tableView.
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(itemArray[indexPath.row])
+        
+        //When user select the cell for first time, there will be a checkmark showing up.
+        //Use a If method here, let user can cancel the checkmark by select it in second times.
+        //If the cell alread have checkmark, then cancel it. or just add a checkmark in the cell.
+        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        } else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        }
+        
+        //The method send a signal when user deselect a row.
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    
 }
 
