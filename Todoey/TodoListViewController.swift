@@ -12,9 +12,21 @@ class TodoListViewController: UITableViewController{
     
     var itemArray = ["Find mike","Steve","I'm Geralt"]
     
+    //The datas container.
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        //After you shot down the app, the data now will be stored inside the phone.
+        //When you execute the app again, we retrieve the datas from the container and put it to the correct custom objects that operating for the app.
+        //The container of the datas is “defaults.array”
+        //The custom object is “itemArray”
+        //Here we used an optional binding to prevent the app crash when the defaults.array is nil.
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+        }
     }
 
     //MARK - Tableview Datasource Methods.
@@ -63,7 +75,12 @@ class TodoListViewController: UITableViewController{
             //What will happen once the user clicks the Add Item button on our UIAlert
             //To add a new member to the allary of itemArray, by deriving the sring from alertTextFiled. i.e. the user type in a data in the TexiFiled in a alert.
             self.itemArray.append(textFiled.text!)
-            //The method is to update the TableView since we append a new String to the itemArry, that will also let the method "numberOfRowsInSection" add a new cells in the tableView, so we need to reload to update the TableView.
+            
+            //The method is to grab data and save it in the data container of tha app.
+            //In here we grab datas from object, the "itemArray", and we give the container a name "TodoListArray"
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            
+          //The method is to update the TableView since we append a new String to the itemArry, that will also let the method "numberOfRowsInSection" add a new cells in the tableView, so we need to reload to update the TableView.
             self.tableView.reloadData()
         }
         
