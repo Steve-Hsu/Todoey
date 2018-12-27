@@ -10,7 +10,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController{
     
-    let itemArray = ["Find mike","Steve","I'm Geralt"]
+    var itemArray = ["Find mike","Steve","I'm Geralt"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +49,35 @@ class TodoListViewController: UITableViewController{
         //The method send a signal when user deselect a row.
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    //MARK - Add new items
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textFiled = UITextField()
+        
+        //Show up a Alert.
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+        
+        //Completion handler, define spec of the button on the Alert and what will happen after you pressed it.
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            //What will happen once the user clicks the Add Item button on our UIAlert
+            //To add a new member to the allary of itemArray, by deriving the sring from alertTextFiled. i.e. the user type in a data in the TexiFiled in a alert.
+            self.itemArray.append(textFiled.text!)
+            //The method is to update the TableView since we append a new String to the itemArry, that will also let the method "numberOfRowsInSection" add a new cells in the tableView, so we need to reload to update the TableView.
+            self.tableView.reloadData()
+        }
+        
+        
+        alert.addTextField { (alertTextFiled) in
+            alertTextFiled.placeholder = "Create new item"
+            textFiled = alertTextFiled
+        }
+        
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+
+    }
+    
     
     
 }
