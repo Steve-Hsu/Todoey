@@ -10,7 +10,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController{
     
-    var itemArray = ["Find mike","Steve","I'm Geralt"]
+    var itemArray = [Item]()
     
     //The datas container.
     let defaults = UserDefaults.standard
@@ -24,9 +24,13 @@ class TodoListViewController: UITableViewController{
         //The container of the datas is “defaults.array”
         //The custom object is “itemArray”
         //Here we used an optional binding to prevent the app crash when the defaults.array is nil.
-        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
-            itemArray = items
-        }
+//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+//            itemArray = items
+//        }
+        
+        let newItem = Item()
+        newItem.title = "Find Mike"
+        itemArray.append(newItem)
     }
 
     //MARK - Tableview Datasource Methods.
@@ -37,10 +41,19 @@ class TodoListViewController: UITableViewController{
     //The required method to deicde the spec of cell and the text in the cell.
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //the method-1
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoitemCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoitemCell", for: indexPath)
         //The method-2
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "ToDoitemCell")
-        cell.textLabel?.text = itemArray[indexPath.row]
+//        let cell = UITableViewCell(style: .default, reuseIdentifier: "ToDoitemCell")
+        
+        let item = itemArray[indexPath.row]
+        
+        cell.textLabel?.text = item.title
+        
+        //Here is a switch, if the property of itemArray[].done is true then displaying a checkmark.
+        //The code is a type of advanced if statement. if the item.done is true, the value would be .checkmark, otherwise, it would be .none.
+        cell.accessoryType = item.done ? .checkmark : .none
+        
+        
         return cell
     }
     
@@ -49,16 +62,12 @@ class TodoListViewController: UITableViewController{
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(itemArray[indexPath.row])
         
-        //When user select the cell for first time, there will be a checkmark showing up.
-        //Use a If method here, let user can cancel the checkmark by select it in second times.
-        //If the cell alread have checkmark, then cancel it. or just add a checkmark in the cell.
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+       //Here as a switch to decide the itemArray.done is true or false that is used as a signal in other method to deicde if cell display a checkmark or not.
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+
+        tableView.reloadData()
         
-        //The method send a signal when user deselect a row.
+        //The method display a animation when user deselect a row.
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -74,7 +83,9 @@ class TodoListViewController: UITableViewController{
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             //What will happen once the user clicks the Add Item button on our UIAlert
             //To add a new member to the allary of itemArray, by deriving the sring from alertTextFiled. i.e. the user type in a data in the TexiFiled in a alert.
-            self.itemArray.append(textFiled.text!)
+            let newItem = Item()
+            newItem.title = textFiled.text!
+            self.itemArray.append(newItem)
             
             //The method is to grab data and save it in the data container of tha app.
             //In here we grab datas from object, the "itemArray", and we give the container a name "TodoListArray"
