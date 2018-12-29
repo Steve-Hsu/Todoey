@@ -23,10 +23,10 @@ class TodoListViewController: UITableViewController{
         //When you execute the app again, we retrieve the datas from the container and put it to the correct custom objects that operating for the app.
         //The container of the datas is “defaults.array”
         //The custom object is “itemArray”
-        //Here we used an optional binding to prevent the app crash when the defaults.array is nil.
-//        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
-//            itemArray = items
-//        }
+//        //Here we used an optional binding to prevent the app crash when the defaults.array is nil.
+        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
+            itemArray = items
+        }
         
         let newItem = Item()
         newItem.title = "Find Mike"
